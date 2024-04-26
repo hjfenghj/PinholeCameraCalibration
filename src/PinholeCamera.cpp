@@ -222,9 +222,10 @@ void PinholeCamera::estimateIntrinsics(const cv::Size& boardSize,
         A.at<double>(i * 2 + 1, 1) = d1[1] * d2[1];
         b.at<double>(i * 2, 0) = -h[2] * v[2];
         b.at<double>(i * 2 + 1, 0) = -d1[2] * d2[2];
-    }
+    }  // 构建Ab = 0,求解B矩阵
 
     cv::Mat f(2, 1, CV_64F);
+    // 求解B矩阵并进一步求解内参矩阵
     cv::solve(A, b, f, cv::DECOMP_NORMAL | cv::DECOMP_LU);
 
     params.fx() = sqrt(fabs(1.0 / f.at<double>(0)));
