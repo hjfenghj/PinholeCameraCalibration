@@ -38,18 +38,6 @@ int main(int argc, char** argv)
         ("extension,e", boost::program_options::value<std::string>(&fileExtension)->default_value(".jpg"), "File extension of images")
         ("view-results", boost::program_options::bool_switch(&viewResults)->default_value(true), "View results")
         ("verbose,v", boost::program_options::bool_switch(&verbose)->default_value(true), "Verbose output");
-    //w,h,s表示棋盘格格子的行列以及棋盘格的大小
-    //i(input)表示输入文件所在的文件夹
-    //c(cost)表示损失函数的类型
-    //e(extension)输入文件的拓展名
-
-    //verbose表示在代码运行的时候是否输出运行的详情
-    //view_results表示标定结束以后是否显示
-
-    //apriltag-size表示一种标定板的某个尺寸
-    //apriltag_interval表示一种间隔
-    //a(apriltag)表示是否使用apriltag标定板
-
 
     boost::program_options::positional_options_description pdesc;
     pdesc.add("input", 1);
