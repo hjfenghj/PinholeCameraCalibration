@@ -12,56 +12,47 @@ Transform::Transform(const Eigen::Matrix4d& H)
    m_t = H.block<3,1>(0,3);
 }
 
-Eigen::Quaterniond&
-Transform::rotation(void)
+Eigen::Quaterniond& Transform::rotation(void)
 {
     return m_q;
 }
 
-const Eigen::Quaterniond&
-Transform::rotation(void) const
+const Eigen::Quaterniond& Transform::rotation(void) const
 {
     return m_q;
 }
 
-double*
-Transform::rotationData(void)
+double* Transform::rotationData(void)
 {
     return m_q.coeffs().data();
 }
 
-const double* const
-Transform::rotationData(void) const
+const double* const Transform::rotationData(void) const
 {
     return m_q.coeffs().data();
 }
 
-Eigen::Vector3d&
-Transform::translation(void)
+Eigen::Vector3d& Transform::translation(void)
 {
     return m_t;
 }
 
-const Eigen::Vector3d&
-Transform::translation(void) const
+const Eigen::Vector3d& Transform::translation(void) const
 {
     return m_t;
 }
 
-double*
-Transform::translationData(void)
+double* Transform::translationData(void)
 {
     return m_t.data();
 }
 
-const double* const
-Transform::translationData(void) const
+const double* const Transform::translationData(void) const
 {
     return m_t.data();
 }
 
-Eigen::Matrix4d
-Transform::toMatrix(void) const
+Eigen::Matrix4d Transform::toMatrix(void) const
 {
     Eigen::Matrix4d H;
     H.setIdentity();

@@ -6,29 +6,19 @@
 class ReprojectionErrorAutoDiff
 {
 public:
-
     ReprojectionErrorAutoDiff(const Eigen::Vector3d& observed_P,
-                       const Eigen::Vector2d& observed_p)
-        : m_observed_P(observed_P), m_observed_p(observed_p) {}
+                              const Eigen::Vector2d& observed_p): m_observed_P(observed_P), m_observed_p(observed_p) {}
 
     // variables: camera intrinsics and camera extrinsics
     template <typename T>
-    bool operator()(const T* const params,
-                    const T* const q,
-                    const T* const t,
-                    T* residuals) const
+    bool operator()(const T* const params, const T* const q, const T* const t, T* residuals) const
     {
         Eigen::Matrix<T, 3, 1> P = m_observed_P.cast<T>();
         Eigen::Matrix<T, 2, 1> predicted_p;
 
         Eigen::Matrix<T, 2, 1> e = Eigen::Matrix<T, 2, 1>::Zero();
 
-        // TODO: homework2
-
         // 完成相机的投影过程，计算重投影误差
-
-        ////////////////////////////////need to delete //////////////////////////////
-
         T P_w[3];
         P_w[0] = T(P(0));
         P_w[1] = T(P(1));
@@ -71,8 +61,6 @@ public:
 
         e = predicted_p - m_observed_p.cast<T>();
 
-        //////////////////////////////////need to delete//////////////////////////////////////////////
-
         residuals[0] = e(0);
         residuals[1] = e(1);
 
@@ -86,16 +74,11 @@ public:
     Eigen::Vector2d m_observed_p;
 };
 
-
 boost::shared_ptr<CostFunctionFactory> CostFunctionFactory::m_instance;
 
-CostFunctionFactory::CostFunctionFactory()
-{
+CostFunctionFactory::CostFunctionFactory() {}
 
-}
-
-boost::shared_ptr<CostFunctionFactory>
-CostFunctionFactory::instance(void)
+boost::shared_ptr<CostFunctionFactory> CostFunctionFactory::instance(void)
 {
     if (m_instance.get() == 0)
     {
@@ -105,18 +88,16 @@ CostFunctionFactory::instance(void)
     return m_instance;
 }
 
-ceres::CostFunction*
-CostFunctionFactory::generateCostFunction(const PinholeCameraConstPtr& camera,
-        const Eigen::Vector3d& observed_P,
-        const Eigen::Vector2d& observed_p) const
+ceres::CostFunction* CostFunctionFactory::generateCostFunction(const PinholeCameraConstPtr& camera,
+                                                               const Eigen::Vector3d& observed_P,
+                                                               const Eigen::Vector2d& observed_p) const
 {
 
     std::vector<double> intrinsic_params;
     camera->writeParameters(intrinsic_params);
     ceres::CostFunction* costFunction = nullptr;
     //自动求导的优化函数
-    costFunction = new ceres::AutoDiffCostFunction<ReprojectionErrorAutoDiff, 2, 8, 4, 3>(
-                  new ReprojectionErrorAutoDiff(observed_P, observed_p));
+    costFunction = new ceres::AutoDiffCostFunction<ReprojectionErrorAutoDiff, 2, 8, 4, 3>(new ReprojectionErrorAutoDiff(observed_P, observed_p));
 
     return costFunction;
 }

@@ -24,7 +24,9 @@
 
 CameraCalibration::CameraCalibration(): m_boardSize(cv::Size(0,0)), m_squareSize(0.0f), m_verbose(false) {}
 
-CameraCalibration::CameraCalibration(const cv::Size& imageSize, const cv::Size& boardSize, float squareSize): m_boardSize(boardSize), m_squareSize(squareSize), m_verbose(false)
+CameraCalibration::CameraCalibration(const cv::Size& imageSize, 
+                                    const cv::Size& boardSize, 
+                                    float squareSize): m_boardSize(boardSize), m_squareSize(squareSize), m_verbose(false)
 {
     PinholeCameraPtr camera(new PinholeCamera);
     PinholeCamera::Parameters params = camera->getParameters();
@@ -199,12 +201,6 @@ void CameraCalibration::drawResults(std::vector<cv::Mat>& images) const
         float errorSum = 0.0f;
         float errorMax = std::numeric_limits<float>::min();
 
-        // TODO homework 3
-
-        // 在图像中画出检测点和重投影点，并计算最大的重投影误差和平均的重投影误差
-
-        ////////////////////////////////////////////////////////////////////////
-
         cv::Mat rvec(3, 1, CV_64F);
         rvec.at<double>(0) = m_cameraPoses.at<double>(i,0);
         rvec.at<double>(1) = m_cameraPoses.at<double>(i,1);
@@ -243,8 +239,6 @@ void CameraCalibration::drawResults(std::vector<cv::Mat>& images) const
             }
         }
 
-        /////////////////////////////////////////////////////////////
-
         std::ostringstream oss;
         oss << "Reprojection error: avg = " << errorSum / m_imagePoints.at(i).size()
             << "   max = " << errorMax;
@@ -260,14 +254,12 @@ void CameraCalibration::setVerbose(bool verbose)
     m_verbose = verbose;
 }
 
-bool CameraCalibration::calibrateHelper(PinholeCameraPtr& camera,
-                                   std::vector<cv::Mat>& rvecs, std::vector<cv::Mat>& tvecs) const
+bool CameraCalibration::calibrateHelper(PinholeCameraPtr& camera, std::vector<cv::Mat>& rvecs, std::vector<cv::Mat>& tvecs) const
 {
     rvecs.assign(m_scenePoints.size(), cv::Mat());//assign第一个参数表示数组rvecs的大小，第二个参数表示rvecs的值
     tvecs.assign(m_scenePoints.size(), cv::Mat());
 
     // STEP 1: Estimate intrinsics
-    //求出相机的内参,和世界坐标系到相机坐标系的外参
     camera->estimateIntrinsics(m_boardSize, m_scenePoints, m_imagePoints);
 
     // STEP 2: Estimate extrinsics
@@ -299,8 +291,7 @@ bool CameraCalibration::calibrateHelper(PinholeCameraPtr& camera,
     return true;
 }
 
-void CameraCalibration::optimize(PinholeCameraPtr& camera,
-                            std::vector<cv::Mat>& rvecs, std::vector<cv::Mat>& tvecs) const
+void CameraCalibration::optimize(PinholeCameraPtr& camera, std::vector<cv::Mat>& rvecs, std::vector<cv::Mat>& tvecs) const
 {
     // Use ceres to do optimization
     ceres::Problem problem;

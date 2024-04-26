@@ -20,9 +20,8 @@ PinholeCamera::Parameters::Parameters()
  , m_cy(0.0)
  , m_imageWidth(0.0)
  , m_imageHeight(0.0)
-{
-
-}
+ {
+ }
 
 PinholeCamera::Parameters::Parameters(int w, int h,
                                       double k1, double k2,
@@ -42,8 +41,7 @@ PinholeCamera::Parameters::Parameters(int w, int h,
 {
 }
 
-PinholeCamera::Parameters&
-PinholeCamera::Parameters::operator=(const PinholeCamera::Parameters& other)
+PinholeCamera::Parameters& PinholeCamera::Parameters::operator=(const PinholeCamera::Parameters& other)
 {
     if (this != &other)
     {
@@ -62,8 +60,7 @@ PinholeCamera::Parameters::operator=(const PinholeCamera::Parameters& other)
     return *this;
 }
 
-std::ostream&
-operator<< (std::ostream& out, const PinholeCamera::Parameters& params)
+std::ostream& operator<< (std::ostream& out, const PinholeCamera::Parameters& params)
 {
     out << "Camera Parameters:" << std::endl;
     out << "   image_width " << params.m_imageWidth << std::endl;
@@ -87,21 +84,19 @@ operator<< (std::ostream& out, const PinholeCamera::Parameters& params)
     return out;
 }
 
-PinholeCamera::PinholeCamera()
- : m_inv_K11(1.0)
- , m_inv_K13(0.0)
- , m_inv_K22(1.0)
- , m_inv_K23(0.0)
- , m_noDistortion(true)
-{
+PinholeCamera::PinholeCamera(): m_inv_K11(1.0), m_inv_K13(0.0), m_inv_K22(1.0), m_inv_K23(0.0), m_noDistortion(true) {}
 
-}
-
-PinholeCamera::PinholeCamera(int imageWidth, int imageHeight,
-                             double k1, double k2, double p1, double p2,
-                             double fx, double fy, double cx, double cy)
- : mParameters(imageWidth, imageHeight,
-               k1, k2, p1, p2, fx, fy, cx, cy)
+PinholeCamera::PinholeCamera(int imageWidth, 
+                             int imageHeight,
+                             double k1, 
+                             double k2, 
+                             double p1, 
+                             double p2,
+                             double fx, 
+                             double fy,
+                             double cx, 
+                             double cy): mParameters(imageWidth, imageHeight,
+                                         k1, k2, p1, p2, fx, fy, cx, cy)
 {
     if ((mParameters.k1() == 0.0) &&
         (mParameters.k2() == 0.0) &&
@@ -247,8 +242,7 @@ PinholeCamera::estimateIntrinsics(const cv::Size& boardSize,
  * \param p image coordinates
  * \param P coordinates of the point on the sphere
  */
-void
-PinholeCamera::liftSphere(const Eigen::Vector2d& p, Eigen::Vector3d& P) const
+void PinholeCamera::liftSphere(const Eigen::Vector2d& p, Eigen::Vector3d& P) const
 {
     liftProjective(p, P);
 
@@ -261,8 +255,7 @@ PinholeCamera::liftSphere(const Eigen::Vector2d& p, Eigen::Vector3d& P) const
  * \param p image coordinates
  * \param P coordinates of the projective ray
  */
-void
-PinholeCamera::liftProjective(const Eigen::Vector2d& p, Eigen::Vector3d& P) const
+void PinholeCamera::liftProjective(const Eigen::Vector2d& p, Eigen::Vector3d& P) const
 {
     double mx_d, my_d,mx2_d, mxy_d, my2_d, mx_u, my_u;
     double rho2_d, rho4_d, radDist_d, Dx_d, Dy_d, inv_denom_d;
@@ -307,8 +300,7 @@ PinholeCamera::liftProjective(const Eigen::Vector2d& p, Eigen::Vector3d& P) cons
  * \param P 3D point coordinates
  * \param p return value, contains the image point coordinates
  */
-void
-PinholeCamera::spaceToPlane(const Eigen::Vector3d& P, Eigen::Vector2d& p) const
+void PinholeCamera::spaceToPlane(const Eigen::Vector3d& P, Eigen::Vector2d& p) const
 {
     Eigen::Vector2d p_u, p_d;
 
@@ -339,8 +331,7 @@ PinholeCamera::spaceToPlane(const Eigen::Vector3d& P, Eigen::Vector2d& p) const
  * \param p_u 2D point coordinates
  * \return image point coordinates
  */
-void
-PinholeCamera::undistToPlane(const Eigen::Vector2d& p_u, Eigen::Vector2d& p) const
+void PinholeCamera::undistToPlane(const Eigen::Vector2d& p_u, Eigen::Vector2d& p) const
 {
     Eigen::Vector2d p_d;
 
@@ -367,8 +358,7 @@ PinholeCamera::undistToPlane(const Eigen::Vector2d& p_u, Eigen::Vector2d& p) con
  * \param p_u undistorted coordinates of point on the normalised plane
  * \return to obtain the distorted point: p_d = p_u + d_u
  */
-void
-PinholeCamera::distortion(const Eigen::Vector2d& p_u, Eigen::Vector2d& d_u) const
+void PinholeCamera::distortion(const Eigen::Vector2d& p_u, Eigen::Vector2d& d_u) const
 {
     double k1 = mParameters.k1();
     double k2 = mParameters.k2();
@@ -386,20 +376,17 @@ PinholeCamera::distortion(const Eigen::Vector2d& p_u, Eigen::Vector2d& d_u) cons
            p_u(1) * rad_dist_u + 2.0 * p2 * mxy_u + p1 * (rho2_u + 2.0 * my2_u);
 }
 
-int
-PinholeCamera::parameterCount(void) const
+int PinholeCamera::parameterCount(void) const
 {
     return 8;
 }
 
-const PinholeCamera::Parameters&
-PinholeCamera::getParameters(void) const
+const PinholeCamera::Parameters& PinholeCamera::getParameters(void) const
 {
     return mParameters;
 }
 
-void
-PinholeCamera::setParameters(const PinholeCamera::Parameters& parameters)
+void PinholeCamera::setParameters(const PinholeCamera::Parameters& parameters)
 {
     mParameters = parameters;
 
@@ -421,8 +408,7 @@ PinholeCamera::setParameters(const PinholeCamera::Parameters& parameters)
     m_inv_K23 = -mParameters.cy() / mParameters.fy();
 }
 
-void
-PinholeCamera::readParameters(const std::vector<double>& parameterVec)
+void PinholeCamera::readParameters(const std::vector<double>& parameterVec)
 {
     if ((int)parameterVec.size() != parameterCount())
     {
@@ -443,8 +429,7 @@ PinholeCamera::readParameters(const std::vector<double>& parameterVec)
     setParameters(params);
 }
 
-void
-PinholeCamera::writeParameters(std::vector<double>& parameterVec) const
+void PinholeCamera::writeParameters(std::vector<double>& parameterVec) const
 {
     parameterVec.resize(parameterCount());
     parameterVec.at(0) = mParameters.k1();
@@ -457,8 +442,7 @@ PinholeCamera::writeParameters(std::vector<double>& parameterVec) const
     parameterVec.at(7) = mParameters.cy();
 }
 
-std::string
-PinholeCamera::parametersToString(void) const
+std::string PinholeCamera::parametersToString(void) const
 {
     std::ostringstream oss;
     oss << mParameters;
@@ -466,10 +450,9 @@ PinholeCamera::parametersToString(void) const
     return oss.str();
 }
 
-void
-PinholeCamera::estimateExtrinsics(const std::vector<cv::Point3f>& objectPoints,
-                           const std::vector<cv::Point2f>& imagePoints,
-                           cv::Mat& rvec, cv::Mat& tvec) const
+void PinholeCamera::estimateExtrinsics(const std::vector<cv::Point3f>& objectPoints,
+                                       const std::vector<cv::Point2f>& imagePoints,
+                                       cv::Mat& rvec, cv::Mat& tvec) const
 {
     std::vector<cv::Point2f> Ms(imagePoints.size());
     for (size_t i = 0; i < Ms.size(); ++i)
@@ -488,8 +471,7 @@ PinholeCamera::estimateExtrinsics(const std::vector<cv::Point3f>& objectPoints,
     cv::solvePnP(objectPoints, Ms, cv::Mat::eye(3, 3, CV_64F), cv::noArray(), rvec, tvec);
 }
 
-double
-PinholeCamera::reprojectionDist(const Eigen::Vector3d& P1, const Eigen::Vector3d& P2) const
+double PinholeCamera::reprojectionDist(const Eigen::Vector3d& P1, const Eigen::Vector3d& P2) const
 {
     Eigen::Vector2d p1, p2;
 
@@ -499,8 +481,7 @@ PinholeCamera::reprojectionDist(const Eigen::Vector3d& P1, const Eigen::Vector3d
     return (p1 - p2).norm();
 }
 
-double
-PinholeCamera::reprojectionError(const std::vector< std::vector<cv::Point3f> >& objectPoints,
+double PinholeCamera::reprojectionError(const std::vector< std::vector<cv::Point3f> >& objectPoints,
                           const std::vector< std::vector<cv::Point2f> >& imagePoints,
                           const std::vector<cv::Mat>& rvecs,
                           const std::vector<cv::Mat>& tvecs) const
@@ -531,8 +512,7 @@ PinholeCamera::reprojectionError(const std::vector< std::vector<cv::Point3f> >& 
     return totalErr / pointsSoFar;
 }
 
-double
-PinholeCamera::reprojectionError(const Eigen::Vector3d& P,
+double PinholeCamera::reprojectionError(const Eigen::Vector3d& P,
                           const Eigen::Quaterniond& camera_q,
                           const Eigen::Vector3d& camera_t,
                           const Eigen::Vector2d& observed_p) const
@@ -545,11 +525,10 @@ PinholeCamera::reprojectionError(const Eigen::Vector3d& P,
     return (p - observed_p).norm();
 }
 
-void
-PinholeCamera::projectPoints(const std::vector<cv::Point3f>& objectPoints,
-                      const cv::Mat& rvec,
-                      const cv::Mat& tvec,
-                      std::vector<cv::Point2f>& imagePoints) const
+void PinholeCamera::projectPoints(const std::vector<cv::Point3f>& objectPoints,
+                                  const cv::Mat& rvec,
+                                  const cv::Mat& tvec,
+                                  std::vector<cv::Point2f>& imagePoints) const
 {
     // project 3D object points to the image plane
     imagePoints.reserve(objectPoints.size());

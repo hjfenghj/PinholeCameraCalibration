@@ -7,9 +7,7 @@
 #include <opencv2/calib3d/calib3d_c.h>
 
 
-Chessboard::Chessboard(cv::Size boardSize, cv::Mat& image)
- : mBoardSize(boardSize)
- , mCornersFound(false)
+Chessboard::Chessboard(cv::Size boardSize, cv::Mat& image): mBoardSize(boardSize), mCornersFound(false)
 {
     if (image.channels() == 1)
     {
@@ -23,8 +21,7 @@ Chessboard::Chessboard(cv::Size boardSize, cv::Mat& image)
     }
 }
 
-void
-Chessboard::findCorners()
+void Chessboard::findCorners()
 {
     mCornersFound = findChessboardCorners(mImage, mBoardSize, mCorners,
                                           CV_CALIB_CB_ADAPTIVE_THRESH +
@@ -40,41 +37,37 @@ Chessboard::findCorners()
     }
 }
 
-const std::vector<cv::Point2f>&
-Chessboard::getCorners(void) const
+const std::vector<cv::Point2f>& Chessboard::getCorners(void) const
 {
     return mCorners;
 }
 
-bool
-Chessboard::cornersFound(void) const
+bool Chessboard::cornersFound(void) const
 {
     return mCornersFound;
 }
 
-const cv::Mat&
-Chessboard::getImage(void) const
+const cv::Mat& Chessboard::getImage(void) const
 {
     return mImage;
 }
 
-const cv::Mat&
-Chessboard::getSketch(void) const
+const cv::Mat& Chessboard::getSketch(void) const
 {
     return mSketch;
 }
 
-bool
-Chessboard::findChessboardCorners(const cv::Mat& image,
-                                  const cv::Size& patternSize,
-                                  std::vector<cv::Point2f>& corners,
-                                  int flags)
+bool Chessboard::findChessboardCorners(const cv::Mat& image,
+                                       const cv::Size& patternSize,
+                                       std::vector<cv::Point2f>& corners,
+                                       int flags)
 {
     //确定输入图片是否有棋盘图案，并定位棋盘板上的内角点。如果所有的角点被找到且以一定的顺序排列
     //（一行接一行，从一行的左边到右边），该函数会返回一个非零值。
     //另外，如果该函数没有找到所有的角点或者重新排列他们，则返回0。
     //第三个参数表示找到的角点的输出储存数组
-    if(cv::findChessboardCorners(image, patternSize, corners, flags)){
+    if(cv::findChessboardCorners(image, patternSize, corners, flags))
+    {
         //亚像素精度的优化,对上边找到的角点corners中的所有角点进行精细化的调整,
         //最后还是储存在corners中，即是输入也是输出
         cv::cornerSubPix(image, corners, cv::Size(11, 11), cv::Size(-1,-1),

@@ -21,7 +21,7 @@ public:
     void addChessboardData(const std::vector<cv::Point2f>& corners);
     //把所有帧中对应的apritag标定板角点坐标在标定板坐标系中的3D位置坐标记录在m_scenePoints;
     void addApriltagDate(const std::vector<cv::Point2f>& corners,
-                        const std::vector<cv::Point3f>& tagpoints);
+                         const std::vector<cv::Point3f>& tagpoints);
 
     bool calibrate(void);
 
