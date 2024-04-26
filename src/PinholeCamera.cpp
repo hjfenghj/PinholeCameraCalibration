@@ -139,20 +139,17 @@ PinholeCamera::PinholeCamera(const PinholeCamera::Parameters& params)
     m_inv_K23 = -mParameters.cy() / mParameters.fy();
 }
 
-int
-PinholeCamera::imageWidth(void) const
+int PinholeCamera::imageWidth(void) const
 {
     return mParameters.imageWidth();
 }
 
-int
-PinholeCamera::imageHeight(void) const
+int PinholeCamera::imageHeight(void) const
 {
     return mParameters.imageHeight();
 }
 
-void
-PinholeCamera::estimateIntrinsics(const cv::Size& boardSize,
+void PinholeCamera::estimateIntrinsics(const cv::Size& boardSize,
                                   const std::vector< std::vector<cv::Point3f> >& objectPoints,
                                   const std::vector< std::vector<cv::Point2f> >& imagePoints)
 {
@@ -185,7 +182,7 @@ PinholeCamera::estimateIntrinsics(const cv::Size& boardSize,
             M.at(j) = cv::Point2f(oPoints.at(j).x, oPoints.at(j).y);
         }
 
-        cv::Mat H = cv::findHomography(M, imagePoints.at(i));
+        cv::Mat H = cv::findHomography(M, imagePoints.at(i));  //H矩阵求解
 
         H.at<double>(0,0) -= H.at<double>(2,0) * cx;
         H.at<double>(0,1) -= H.at<double>(2,1) * cx;

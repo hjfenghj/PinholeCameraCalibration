@@ -25,7 +25,7 @@ public:
 
     bool calibrate(void);
 
-    //所有图片中国,满足标定标准的样例个数
+    //所有图片中,满足标定标准的样例个数
     int sampleCount(void) const;
     std::vector<std::vector<cv::Point2f> >& imagePoints(void);
     const std::vector<std::vector<cv::Point2f> >& imagePoints(void) const;

@@ -103,7 +103,7 @@ int main(int argc, char** argv)
                                                                       //squareSize每个格子的大小
     calibration.setVerbose(verbose);
 
-    std::vector<bool> chessboardFound(imageFilenames.size(), false);  //所有的帧中,标定板是否出现
+    std::vector<bool> chessboardFound(imageFilenames.size(), false);  //所有的帧中,标定板是否出现,初始化为false
 
     // use chessboard target 
     for (size_t i = 0; i < imageFilenames.size(); ++i)
